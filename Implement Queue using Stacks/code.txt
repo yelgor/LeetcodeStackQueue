@@ -1,0 +1,62 @@
+class Node:
+    def __init__(self, data, next=None):
+        self.data, self.next = data, next
+
+class Stack:
+    def __init__(self):
+        self._head = None
+
+    def push(self, element):
+        if self._head is None:
+            self._head = Node(element)
+        else:
+            new_elem = Node(element)
+            new_elem.next = self._head
+            self._head = new_elem
+
+    def pop(self):
+        if self._head is None:
+            return None
+        else:
+            last_data = self._head.data
+            self._head = self._head.next
+            return last_data
+
+    def peek(self):
+        return self._head.data if self._head is not None else None
+
+    def is_empty(self):
+        return self._head is None
+
+    def size(self):
+        head_copy = self._head
+        counter = 0
+        while head_copy is not None:
+            counter += 1
+            head_copy = head_copy.next
+        return counter
+
+
+class MyQueue:
+    def __init__(self):
+        self._stack1 = Stack()
+        self._stack2 = Stack()
+
+    def push(self, element: int) -> None:
+        self._stack1.push(element)
+
+    def _shift(self):
+        if self._stack2.is_empty():
+            while not self._stack1.is_empty():
+                self._stack2.push(self._stack1.pop())
+
+    def pop(self) -> int:
+        self._shift()
+        return self._stack2.pop()
+
+    def peek(self) -> int:
+        self._shift()
+        return self._stack2.peek()
+
+    def empty(self) -> bool:
+        return self._stack1.is_empty() and self._stack2.is_empty()
